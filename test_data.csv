@@ -1,0 +1,16 @@
+1,4,burger
+1,3,pizza
+1,6,hotdog
+1,2,burger
+2,3,pizza
+2,nil,hotdog
+2,6,pizza
+3,3,burger
+3,2,hotdog
+3,1,hotdog
+4,4,cake
+4,5,pizza
+4,2,burger
+4,0,hotdog,pizza
+4,2,burger,pizza
+4,6,hotdog,burger
