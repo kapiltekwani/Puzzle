@@ -2,7 +2,7 @@
 require 'csv'
 
 class Restaurent
-
+		
   attr_accessor :restaurent_number, :minimum_price
   
   def initialize(restaurent_number)
@@ -11,7 +11,7 @@ class Restaurent
   end
 
   #this functions checks that whether current combination of item_ids cover all items required by user
-  def isComplete(item_ids, item_hash)
+  def is_complete?(item_ids, item_hash)
     ARGV[1..-1].all? do |item|
       item_ids.collect{|item_id| item_hash[item][self.restaurent_number].keys.include?(item_id)}.uniq.include?(true)
     end
@@ -28,13 +28,13 @@ class Restaurent
   end
 
   #this functions returns the minimum price for which desired input menu will be available for a given restaurent
-  def findMinimum(kitchen, m, n, plate, k, item_hash, max_price_hash)
+  def find_minimum(kitchen, m, n, plate, k, item_hash, max_price_hash)
     if !(kitchen[m].nil?)
       if !(kitchen[m][n].nil?)
         plate[k] = kitchen[m][n]
         k += 1 
         
-        if isComplete(plate.collect(&:id), item_hash)
+        if is_complete?(plate.collect(&:id), item_hash)
           current_bill = self.bill_plate(plate.uniq, max_price_hash)
 
           if self.minimum_price == -1
@@ -46,9 +46,9 @@ class Restaurent
           end
         end
 
-        self.minimum_price = findMinimum(kitchen, m+1, 0, plate, k, item_hash, max_price_hash)
+        self.minimum_price = find_minimum(kitchen, m+1, 0, plate, k, item_hash, max_price_hash)
         k -= 1
-        self.minimum_price = findMinimum(kitchen, m, n+1, plate, k, item_hash, max_price_hash)
+        self.minimum_price = find_minimum(kitchen, m, n+1, plate, k, item_hash, max_price_hash)
       end
     end
     self.minimum_price
@@ -82,12 +82,27 @@ def make_menu_hash(item_hash, max_price_hash, row, item_counter)
   [item_hash, max_price_hash]
 end
 
-def convertIntoStructure(hash)
+def convert_into_structure(hash)
   array = []
   hash.each do |key, value|
     array << MenuItem.new(key, value )
   end
   array
+end
+
+if ARGV.count == 0
+	puts "Please provide a valid file name"
+  exit
+else
+	if !(ARGV[0] =~ /.csv/)
+  	puts "Please enter a valid menu in .csv format"
+  	exit
+	else 
+  	if ARGV.count < 2
+    	puts "Please input atleast one item that you wish to eat"
+    	exit
+		end
+  end
 end
 
 CSV.foreach(ARGV[0]) do |row|
@@ -102,15 +117,6 @@ CSV.foreach(ARGV[0]) do |row|
   end
 end
 
-if !(ARGV[0] =~ /.csv/)
-  puts "Please enter a valid menu in .csv format"
-  exit
-else 
-  if ARGV.count < 2
-    puts "Please input atleast one item that you wish to eat"
-    exit
-  end
-end
 
 #function is user for restaurents that does not have prices for any of their items
 #then for those restaurents we are setting the value of maximum price item's price to be (max price of any item among all restaurents + 1)
@@ -151,11 +157,11 @@ for r in restaurents do
   counter = 0
   kitchen = []
   for item in desired_items do
-    kitchen[counter] = convertIntoStructure(item_hash[item][r.restaurent_number])
+    kitchen[counter] = convert_into_structure(item_hash[item][r.restaurent_number])
     counter += 1
   end
   plate, k  = [], 0
-  r.minimum_price = r.findMinimum(kitchen, 0, 0, plate, k, item_hash, max_price_hash)
+  r.minimum_price = r.find_minimum(kitchen, 0, 0, plate, k, item_hash, max_price_hash)
 end
 
 #finding the restaurent which is charging least price for desired input items
