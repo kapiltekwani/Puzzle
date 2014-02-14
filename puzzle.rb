@@ -91,28 +91,26 @@ def convert_into_structure(hash)
 end
 
 if ARGV.count == 0
-	puts "Please provide a valid file name"
+  puts "Please provide a valid file name"
   exit
 else
-	if !(ARGV[0] =~ /.csv/)
-  	puts "Please enter a valid menu in .csv format"
-  	exit
-	else 
-  	if ARGV.count < 2
-    	puts "Please input atleast one item that you wish to eat"
-    	exit
-		end
+  if !(ARGV[0] =~ /.csv/)
+    puts "Please enter a valid menu in .csv format"
+    exit
+  else 
+    if ARGV.count < 2
+      puts "Please input atleast one item that you wish to eat"
+      exit
+    end
   end
 end
 
 CSV.foreach(ARGV[0]) do |row|
-  
   #if program encounters a row in csv in which either restaurent_no is missing
   #or item_name(s) is missing then we ignore that row.
   unless (row[0].nil? || row[2..-1].empty?)
     #this hash will be used after available restaurent selection to calculate the price of the meal
     item_hash, max_price_hash = make_menu_hash(item_hash, max_price_hash, row, item_counter)
-
     item_counter += 1
   end
 end
