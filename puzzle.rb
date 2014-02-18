@@ -57,7 +57,7 @@ end
 
 MenuItem = Struct.new(:id ,:price)
 
-item_hash, max_price_hash,available_restaurents = {}, {}, {}
+item_hash, max_price_hash, available_restaurents = {}, {}, {}
 item_counter, restaurents = 0, []
 
 #this method is used to read the input csv file and
