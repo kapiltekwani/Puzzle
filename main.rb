@@ -1,6 +1,6 @@
 require 'csv'
-require '~/work/Puzzle/restaurent'
-require '~/work/Puzzle/puzzle'
+require './restaurent'
+require './puzzle'
 
 #input file validations
 if ARGV.count == 0
